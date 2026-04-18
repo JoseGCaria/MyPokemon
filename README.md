@@ -1,16 +1,23 @@
-# React + Vite
+# 📋 MyPokemon - Cadastro de Cartas
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Um gerenciador de cartas Pokémon desenvolvido para organizar sua coleção de forma simples e rápida. Este projeto foi criado utilizando **React** e **Vite**.
 
-Currently, two official plugins are available:
+## 🚀 Funcionalidades
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- [ ] **Cadastro de Cartas:** Adicione novas cartas à sua coleção.
+- [ ] **Listagem:** Visualize todos os Pokémons cadastrados.
+- [ ] **Exclusão:** Remova cartas da sua lista (em breve).
+- [ ] **Filtros:** Busque por tipo ou nome (em breve).
 
-## React Compiler
+## 🛠️ Tecnologias Utilizadas
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **React.js**: Biblioteca para construção da interface.
+- **Vite**: Ferramenta de build ultra-rápida.
+- **CSS3**: Estilização personalizada.
+- **Git/GitHub**: Controle de versão e hospedagem.
 
-## Expanding the ESLint configuration
+## 📦 Como rodar o projeto localmente
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+1. Clone o repositório:
+   ```bash
+   git clone https://github.com/JoseGCaria/MyPokemon.git
