@@ -27,7 +27,7 @@ Antes de começar, você vai precisar ter instalado em sua máquina:
 ###  Clonando o Repositório
 ```bash
 # Clone este repositório
-git clone [https://github.com/JoseGCaria/MyPokemon.git](https://github.com/JoseGCaria/MyPokemon.git)
+git clone https://github.com/JoseGCaria/MyPokemon.git
 
 # Acesse a pasta do projeto
 cd MyPokemon
