@@ -1,0 +1,1 @@
+  console.log(`Pressione CTRL+C para parar o servidor`);
