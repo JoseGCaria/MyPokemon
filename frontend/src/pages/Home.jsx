@@ -1,66 +1,102 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { getPokemonList } from "../services/api";
+import { useNavigate } from "react-router-dom"; // Importe o navigate
 
 export const Home = () => {
   const { user, logout } = useAuth();
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Inicialize o navigate
   const [pokemons, setPokemons] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState("idle");
 
+  // Função para deslogar e redirecionar
   const handleLogout = () => {
     logout();
     navigate("/login");
   };
 
-  // Função para buscar Pokémons reais da API
-  const fetchPokemons = async () => {
-    setLoading(true);
+  const loadPokemons = async () => {
+    setStatus("loading");
     try {
-      // Busca os 50 primeiros pokémons
-      const response = await fetch("https://pokeapi.co/api/v2/pokemon?limit=50");
-      const data = await response.json();
-      setPokemons(data.results);
-    } catch (error) {
-      console.error("Erro ao buscar Pokémons:", error);
-    } finally {
-      setLoading(false);
+      const data = await getPokemonList();
+      setPokemons(data);
+      setStatus("success");
+    } catch {
+      setStatus("error");
     }
   };
 
   return (
-    <div style={{ padding: "40px", textAlign: "center", fontFamily: "sans-serif" }}>
-      <h1>Bem-vindo a pokedex, {user?.name || "Admin"}!</h1>
-      <p>Você está logado como: <strong>{user?.email}</strong></p>
-      
-      <div style={{ marginTop: "20px", marginBottom: "40px", display: "flex", gap: "10px", justifyContent: "center" }}>
-        <button 
-          onClick={fetchPokemons}
-          style={{ padding: "10px 20px", cursor: "pointer", background: "#3432a4", color: "white", border: "1px solid #545353", fontWeight: "bold" }}
-        >
-          {loading ? "Carregando..." : "Ver Meus Pokémons"}
-        </button>
-        
-        <button 
-          onClick={handleLogout}
-          style={{ padding: "10px 20px", cursor: "pointer", background: "#ff4d4d", color: "white", border: "none", fontWeight: "bold" }}
-        >
-          Sair (Logout)
+    <div style={styles.container}>
+      {/* Botão de Logout posicionado no topo */}
+      <div style={{ display: "flex", justifyContent: "flex-end" }}>
+        <button onClick={handleLogout} style={styles.logoutButton}>
+          Sair
         </button>
       </div>
 
-      {/* Lista de Pokémons gerada após o clique */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: "15px", maxWidth: "800px", margin: "0 auto" }}>
-        {pokemons.map((poke, index) => (
-          <div key={index} style={{ border: "1px solid #ddd", padding: "10px", borderRadius: "8px", background: "#f9f9f9", textTransform: "capitalize" }}>
-            <img 
-              src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${poke.url.split('/')[6]}.png`} 
-              alt={poke.name} 
-            />
-            <p><strong>{poke.name}</strong></p>
-          </div>
-        ))}
+      <h1>Olá, {user?.name}!</h1>
+      
+      <button onClick={loadPokemons} disabled={status === "loading"} style={styles.exploreButton}>
+        {status === "loading" ? "Carregando..." : "Explorar Pokémons"}
+      </button>
+
+      {status === "error" && <p style={{ color: "red" }}>Houve um problema ao carregar.</p>}
+
+      <div style={styles.grid}>
+        {pokemons.map((p, i) => {
+          const id = p.url.split("/")[6];
+          return (
+            <div key={i} style={styles.card}>
+              <img 
+                src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`} 
+                alt={p.name} 
+                width="100" 
+              />
+              <p style={{ textTransform: "capitalize" }}><strong>{p.name}</strong></p>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
+};
+
+const styles = {
+  container: { padding: "2rem", textAlign: "center", fontFamily: "sans-serif" },
+  
+  // Estilo do botão de sair (vermelho)
+  logoutButton: {
+    padding: "8px 16px",
+    background: "#ff4d4d",
+    color: "white",
+    border: "none",
+    borderRadius: "4px",
+    cursor: "pointer",
+    fontWeight: "bold"
+  },
+
+  // Estilo do botão de explorar (cinza igual ao da sua imagem)
+  exploreButton: {
+    padding: "10px 20px",
+    cursor: "pointer",
+    background: "#efefef",
+    border: "1px solid #767676",
+    borderRadius: "2px"
+  },
+
+  grid: { 
+    display: "grid", 
+    gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))", 
+    gap: "1rem", 
+    marginTop: "2rem" 
+  },
+  
+  card: { 
+    padding: "1rem", 
+    background: "#fff", 
+    borderRadius: "8px", 
+    boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
+    border: "1px solid #eee"
+  }
 };

@@ -1,43 +1,55 @@
 const express = require('express');
-const nodemailer = require('nodemailer');
 const cors = require('cors');
+// IMPORTA AQUI:
+const { sendRecoveryEmail } = require('./email'); 
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// CONFIGURAÇÃO DO MAILTRAP (Dados do seu print)
-const transport = nodemailer.createTransport({
-  host: "sandbox.smtp.mailtrap.io",
-  port: 2525,
-  auth: {
-    user: "19a80c969a7c26", // Seu Username da imagem
-    pass: "740da4232cc4b6"  // LEMBRE-SE: Use a senha real (clique em "Show" no Mailtrap)
+const recoveryCodes = {}; 
+
+app.post('/send-recovery-email', async (req, res) => {
+  const { email } = req.body;
+  const recoveryCode = Math.floor(100000 + Math.random() * 900000).toString();
+
+  recoveryCodes[email] = recoveryCode;
+
+  try {
+    // USA A FUNÇÃO DO ARQUIVO EMAIL.JS:
+    await sendRecoveryEmail(email, recoveryCode);
+    
+    console.log(`Código ${recoveryCode} enviado para ${email}`);
+    res.status(200).json({ message: "E-mail enviado!" });
+  } catch (error) {
+    console.error("Erro no servidor:", error);
+    res.status(500).json({ error: "Erro ao enviar e-mail" });
   }
 });
 
-app.post('/send-recovery-email', (req, res) => {
-  const { email } = req.body;
-  const recoveryCode = Math.floor(100000 + Math.random() * 900000);
+// 2. NOVA ROTA: PARA VALIDAR O CÓDIGO E MUDAR A SENHA
+app.post('/reset-password', (req, res) => {
+  const { email, code, newPassword } = req.body;
 
-  const mailOptions = {
-    from: '"MyPokemon Support" <no-reply@mypokemon.com>',
-    to: email,
-    subject: 'Código de Recuperação de Senha',
-    text: `Seu código de recuperação é: ${recoveryCode}`,
-    html: `<b>Seu código de recuperação é: ${recoveryCode}</b>`
-  };
+  // Verifica se o código enviado pelo usuário bate com o que salvamos
+  if (recoveryCodes[email] && recoveryCodes[email] === code) {
+    
+    console.log(`Senha alterada com sucesso para: ${email}`);
+    
+    // Remove o código para ele não ser usado de novo
+    delete recoveryCodes[email]; 
 
-  transport.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.log("❌ Erro ao enviar:", error);
-      return res.status(500).json({ error: error.message });
-    }
-    console.log("✅ E-mail enviado para o Mailtrap!");
-    res.status(200).json({ message: "E-mail enviado!", code: recoveryCode });
-  });
+    return res.status(200).json({ message: "Senha alterada com sucesso!" });
+  } else {
+    console.log("Tentativa com código inválido");
+    return res.status(400).json({ message: "Código inválido ou expirado." });
+  }
+});
+
+app.get('/', (req, res) => {
+  res.send('Backend MyPokemon está funcionando!');
 });
 
 app.listen(3001, () => {
-  console.log('🚀 Backend de e-mail rodando na porta 3001');
+  console.log('Backend rodando em http://localhost:3001');
 });

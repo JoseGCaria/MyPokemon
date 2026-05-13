@@ -3,12 +3,9 @@ import { useAuth } from "../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 
 export const Login = () => {
-  // Configuração de Admin para facilitar o teste de QA
-  const adminEmail = "admin@pokemon.com";
-  const adminPassword = "123456"; 
-
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
+  // CORREÇÃO: Adicionadas aspas vazias para evitar warnings de input não-controlado
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   
   const { login } = useAuth();
@@ -21,10 +18,10 @@ export const Login = () => {
     const success = login(email, password);
     
     if (success) {
-      console.log("✅ Acesso concedido como Admin!");
+      console.log("Login realizado com sucesso!");
       navigate("/");
     } else {
-      console.error("❌ Credenciais inválidas.");
+      console.error("Credenciais inválidas.");
       setError("E-mail ou senha inválidos!");
     }
   };
@@ -81,7 +78,7 @@ export const Login = () => {
           cursor: "pointer",
           fontWeight: "bold"
         }}>
-          Entrar como Admin
+          Login
         </button>
       </form>
 
@@ -91,15 +88,7 @@ export const Login = () => {
           Esqueceu sua senha?
         </Link>
       </div>
-
-      <div style={{ 
-        marginTop: "40px", 
-        padding: "15px", 
-        border: "1px dashed #666", 
-        fontSize: "13px",
-        color: "#666" 
-      }}>
-      </div>
+     
     </div>
   );
 };

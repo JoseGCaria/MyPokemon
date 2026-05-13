@@ -1,17 +1,22 @@
 import axios from 'axios';
 
-// Criamos uma instância para não repetir a URL base sempre
-export const api = axios.create({
+// Instância para seu Backend (Recuperação de senha)
+export const internalApi = axios.create({
+  baseURL: 'http://localhost:3001'
+});
+
+// Instância para a PokeAPI
+export const pokeApi = axios.create({
   baseURL: 'https://pokeapi.co/api/v2/'
 });
 
-// Função para buscar a lista de 50 pokemons
-export const getPokemonList = async () => {
+// Serviço de Pokémons
+export const getPokemonList = async (limit = 1000) => {
   try {
-    const response = await api.get('pokemon?limit=50');
-    return response.data.results; // Retorna o array de nomes e URLs
+    const { data } = await pokeApi.get(`pokemon?limit=${limit}`);
+    return data.results;
   } catch (error) {
-    console.error("Erro na requisição da API:", error);
-    return [];
+    console.error("Erro ao buscar Pokémons:", error);
+    throw error; // Lançamos o erro para o componente tratar
   }
 };
