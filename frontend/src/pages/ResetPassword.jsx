@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom"; // Adicionado Link aqui
+import { useNavigate, Link } from "react-router-dom";
 import { internalApi } from "../services/api"; 
+import { PasswordInput } from "../components/PasswordInput"; 
 
 export const ResetPassword = () => {
   const [email, setEmail] = useState("");
@@ -8,7 +9,7 @@ export const ResetPassword = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState({ type: "", text: "" });
-  const [isSubmitting, setIsSubmitting] = useState(false); // Novo: estado de carregamento
+  const [isSubmitting, setIsSubmitting] = useState(false); 
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -29,7 +30,7 @@ export const ResetPassword = () => {
         newPassword 
       });
 
-      // Atualiza a persistência local (LocalStorage)
+   
       const users = JSON.parse(localStorage.getItem("users") || "[]");
       const userIndex = users.findIndex(u => u.email === email);
       
@@ -91,16 +92,14 @@ export const ResetPassword = () => {
           required 
           style={{ padding: "12px", border: "1px solid #ccc", borderRadius: "4px" }}
         />
-        <input 
-          type="password" 
+        <PasswordInput 
           placeholder="Nova Senha" 
           value={newPassword} 
           onChange={(e) => setNewPassword(e.target.value)} 
           required 
           style={{ padding: "12px", border: "1px solid #ccc", borderRadius: "4px" }}
         />
-        <input 
-          type="password" 
+        <PasswordInput 
           placeholder="Confirme a Nova Senha" 
           value={confirmPassword} 
           onChange={(e) => setConfirmPassword(e.target.value)} 
@@ -109,7 +108,7 @@ export const ResetPassword = () => {
         />
         <button 
           type="submit" 
-          disabled={isSubmitting} // Desabilita enquanto envia
+          disabled={isSubmitting}
           style={{ 
             padding: "12px", 
             background: isSubmitting ? "#ccc" : "#3432a4", 

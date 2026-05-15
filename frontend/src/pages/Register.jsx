@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
+import { PasswordInput } from "../components/PasswordInput"; 
 
 export const Register = () => {
   const [name, setName] = useState("");
@@ -32,7 +33,7 @@ export const Register = () => {
       textAlign: "center",
       fontFamily: "Arial, sans-serif" 
     }}>
-      <h1>Criar Conta MyPokemon</h1>
+      <h1>Criar Conta na Pokédex</h1>
       
       {/* Caixa de erro com o mesmo estilo do Login */}
       {error && (
@@ -72,9 +73,7 @@ export const Register = () => {
           required 
           style={{ padding: "12px", border: "1px solid #ccc", borderRadius: "4px" }}
         />
-        <input 
-          type="password" 
-          placeholder="Senha" 
+        <PasswordInput 
           value={password} 
           onChange={(e) => setPassword(e.target.value)} 
           required 
@@ -95,7 +94,7 @@ export const Register = () => {
 
       <div style={{ marginTop: "25px" }}>
         <p>
-          Já tem uma conta? <Link to="/login" style={{ color: "#007bff", textDecoration: "none" }}>Voltar para o Login</Link>
+          Já tem uma conta? <Link to="/login" style={{ color: "#007bff", textDecoration: "none" }}> Voltar para o Login </Link>
         </p>
       </div>
     </div>

@@ -9,7 +9,13 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const loggedUser = localStorage.getItem("loggedUser");
-    if (loggedUser) setUser(JSON.parse(loggedUser));
+    if (loggedUser) {
+      try {
+        setUser(JSON.parse(loggedUser));
+      } catch (e) {
+        localStorage.removeItem("loggedUser");
+      }
+    }
     setLoading(false);
   }, []);
 
@@ -17,10 +23,18 @@ export const AuthProvider = ({ children }) => {
     const users = JSON.parse(localStorage.getItem("users") || "[]");
     const found = users.find(u => u.email === email && u.password === password);
 
+    // Verificação de Admin ou Usuário Comum
     if (found || (email === "admin@admin.com" && password === "admin")) {
       const userData = found || { name: "Admin", email };
+      
       setUser(userData);
+      
+      // 1. Grava a sessão (Usuário logado no momento)
       localStorage.setItem("loggedUser", JSON.stringify(userData));
+      
+      // 2. Grava a lembrança do e-mail (Persiste mesmo após logout)
+      localStorage.setItem("rememberedEmail", email);
+      
       return true;
     }
     return false;
@@ -32,6 +46,10 @@ export const AuthProvider = ({ children }) => {
 
     users.push({ name, email, password });
     localStorage.setItem("users", JSON.stringify(users));
+    
+    // Opcional: Já salva o e-mail no registro para facilitar o primeiro login
+    localStorage.setItem("rememberedEmail", email);
+    
     return true;
   };
 
@@ -49,6 +67,8 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     setUser(null);
+    // IMPORTANTE: Removemos apenas a sessão. 
+    // O "rememberedEmail" NÃO é removido aqui para que continue na tela de login.
     localStorage.removeItem("loggedUser");
   };
 

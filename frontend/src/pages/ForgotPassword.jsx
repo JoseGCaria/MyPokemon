@@ -4,7 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 
 export const ForgotPassword = () => {
   const [email, setEmail] = useState("");
-  const [message, setMessage] = useState({ type: "", text: "" }); // Objeto para feedback colorido
+  const [message, setMessage] = useState({ type: "", text: "" }); 
   const { forgotPassword } = useAuth();
   const navigate = useNavigate();
 

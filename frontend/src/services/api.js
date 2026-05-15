@@ -10,13 +10,20 @@ export const pokeApi = axios.create({
   baseURL: 'https://pokeapi.co/api/v2/'
 });
 
-// Serviço de Pokémons
-export const getPokemonList = async (limit = 1000) => {
+// Serviço de Pokémons atualizado
+export const getPokemonList = async (limit = 1025, offset = 0) => {
   try {
-    const { data } = await pokeApi.get(`pokemon?limit=${limit}`);
+    // Usamos params do Axios para montar a URL: pokemon?limit=1025&offset=0
+    const { data } = await pokeApi.get('pokemon', {
+      params: {
+        limit: limit,
+        offset: offset
+      }
+    });
+    
     return data.results;
   } catch (error) {
     console.error("Erro ao buscar Pokémons:", error);
-    throw error; // Lançamos o erro para o componente tratar
+    throw error; 
   }
 };

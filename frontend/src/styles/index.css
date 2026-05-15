@@ -1,21 +1,57 @@
-.pokemon-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 20px;
-  padding: 20px;
+/* src/index.css */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.pokemon-card {
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  padding: 15px;
-  text-align: center;
-  background: #f9f9f9;
-  transition: transform 0.2s;
-  text-transform: capitalize;
+html, body {
+  width: 100%;
+  height: auto; 
+  min-height: 100vh;
+  background-color: #ffffff; /* ⚪ Fundo padrão branco mantido */
+  color: #333333;
+  
+  /* Mantém a página livre de travas para o position: fixed funcionar perfeitamente */
+  overflow: visible !important; 
 }
 
-.pokemon-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+#root {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  
+  /* Protege contra quebras horizontais sem prender o scroll vertical */
+  overflow-x: hidden;
+  overflow-y: visible;
+}
+
+/* Responsividade do Header e elementos da busca no Mobile */
+@media (max-width: 768px) {
+  input[type="text"] {
+    font-size: 15px !important;
+    padding: 12px 20px !important;
+  }
+
+  /* 1. Oculta a barra vertical '|' para não quebrar o visual quando os links descerem */
+  header nav > div:not([class]),
+  header nav span {
+    display: none !important;
+  }
+
+  /* 2. Garante que os links e o botão SAIR fiquem visíveis, centralizados na segunda linha */
+  header nav {
+    display: flex !important; /* Força a exibição se o Header tiver colocado display:none antes */
+    justify-content: center !important;
+    width: 100% !important;
+    margin-top: 8px; /* Espaçamento para não grudar na Logo acima */
+    gap: 15px !important; /* Distância confortável entre Home, Favoritos e Sair */
+  }
+
+  /* Ajusta o bloco de links internos para alinhar no centro também */
+  header nav > div {
+    display: flex !important;
+    gap: 15px !important;
+  }
 }
